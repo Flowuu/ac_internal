@@ -19,6 +19,9 @@
     <Filter Include="Cheat">
       <UniqueIdentifier>{bce086f2-2ef9-49aa-a652-30d313ce363d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libs\imgui">
+      <UniqueIdentifier>{08b45724-48dd-4d30-a744-04b70031629f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Libs\flogger.hpp">
@@ -33,6 +36,30 @@
     <ClInclude Include="cheat.h">
       <Filter>Cheat</Filter>
     </ClInclude>
+    <ClInclude Include="libs\imgui\imconfig.h">
+      <Filter>Libs\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\imgui\imgui.h">
+      <Filter>Libs\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\imgui\imgui_impl_opengl2.h">
+      <Filter>Libs\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\imgui\imgui_impl_win32.h">
+      <Filter>Libs\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\imgui\imgui_internal.h">
+      <Filter>Libs\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\imgui\imstb_rectpack.h">
+      <Filter>Libs\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\imgui\imstb_textedit.h">
+      <Filter>Libs\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\imgui\imstb_truetype.h">
+      <Filter>Libs\imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="entry.cpp">
@@ -40,6 +67,27 @@
     </ClCompile>
     <ClCompile Include="cheat.cpp">
       <Filter>Cheat</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\imgui\imgui.cpp">
+      <Filter>Libs\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\imgui\imgui_demo.cpp">
+      <Filter>Libs\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\imgui\imgui_draw.cpp">
+      <Filter>Libs\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\imgui\imgui_impl_opengl2.cpp">
+      <Filter>Libs\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\imgui\imgui_impl_win32.cpp">
+      <Filter>Libs\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\imgui\imgui_tables.cpp">
+      <Filter>Libs\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\imgui\imgui_widgets.cpp">
+      <Filter>Libs\imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

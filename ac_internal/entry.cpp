@@ -7,7 +7,9 @@ void closeAll(HINSTANCE hinstDll)
 {
 	console.report(logLevel::WARNING, "Detaching ac_internal.dll");
 
-	Sleep(2000);
+	Sleep(1500);
+
+	cheat::menu::closeImgui();
 
 	mHook.closeHook();
 	console.close();
