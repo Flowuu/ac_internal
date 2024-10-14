@@ -2,6 +2,7 @@
 #include <flogger.hpp>
 #include "cheat.h"
 #include "hook.hpp"
+#include "utility.hpp"
 
 void closeAll(HINSTANCE hinstDll)
 {
@@ -18,8 +19,10 @@ void closeAll(HINSTANCE hinstDll)
 
 void initAll(HINSTANCE hinstDll)
 {
+	console.showCursor(false);
 	console.toggleTimestamp();
 	console.report(logLevel::Success, "Injected.");
+	console.toggleTimestamp();
 
 	cheat::initAll();
 

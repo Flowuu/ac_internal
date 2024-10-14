@@ -1,6 +1,7 @@
 #ifndef flogger
 #define flogger
 
+
 #include <iostream>
 #include <Windows.h>
 #include <iomanip>

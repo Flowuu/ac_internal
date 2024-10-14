@@ -1,3 +1,7 @@
+#ifndef hook_h
+#define hook_h
+
+
 #include <MinHook.h>
 #include <flogger.hpp>
 
@@ -40,3 +44,5 @@ public:
 			console.logWithTitle(logLevel::INFO, "MinHook", "Enabled hook.");
 	}
 }; inline hook mHook;
+
+#endif // !Hook_h

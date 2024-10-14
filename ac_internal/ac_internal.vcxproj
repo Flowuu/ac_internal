@@ -148,6 +148,7 @@
     <ClInclude Include="libs\imgui\imstb_textedit.h" />
     <ClInclude Include="libs\imgui\imstb_truetype.h" />
     <ClInclude Include="libs\minhook\MinHook.h" />
+    <ClInclude Include="libs\utility.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cheat.cpp" />

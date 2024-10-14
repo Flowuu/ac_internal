@@ -60,6 +60,9 @@
     <ClInclude Include="libs\imgui\imstb_truetype.h">
       <Filter>Libs\imgui</Filter>
     </ClInclude>
+    <ClInclude Include="libs\utility.hpp">
+      <Filter>Libs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="entry.cpp">
