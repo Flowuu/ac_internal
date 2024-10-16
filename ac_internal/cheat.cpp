@@ -9,6 +9,7 @@ typedef int(*hSDL_SetRelativeMouseMode)(int);
 glSwapBuff oSwapBuff = (glSwapBuff)GetProcAddress(GetModuleHandle(L"opengl32.dll"), "wglSwapBuffers");
 hSDL_SetRelativeMouseMode SDL_SetRelativeMouseMode = (hSDL_SetRelativeMouseMode)(GetProcAddress(GetModuleHandle(L"SDL2.dll"), "SDL_SetRelativeMouseMode"));
 
+#include "draw.h"
 
 bool __stdcall mHookSwapBuff(HDC hdc)
 {
@@ -16,21 +17,23 @@ bool __stdcall mHookSwapBuff(HDC hdc)
 		cheat::menu::menuToggle = !cheat::menu::menuToggle;
 	SDL_SetRelativeMouseMode(!cheat::menu::menuToggle);
 
+	ImGui_ImplOpenGL2_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	ImGuiIO& io = ImGui::GetIO();
 
 	if(cheat::menu::menuToggle)
 	{
-		ImGuiIO& io = ImGui::GetIO();
 		io.MouseDrawCursor = cheat::menu::menuToggle;
 
-		ImGui_ImplOpenGL2_NewFrame();
-		ImGui_ImplWin32_NewFrame();
-		ImGui::NewFrame();
-
 		ImGui::ShowDemoWindow();
-
-		ImGui::Render();
-		ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
 	}
+
+	cheat::esp::initAll();
+
+	ImGui::Render();
+	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
 
 	return oSwapBuff(hdc);
 }

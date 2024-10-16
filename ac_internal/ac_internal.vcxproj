@@ -147,12 +147,16 @@
     <ClInclude Include="libs\imgui\imstb_rectpack.h" />
     <ClInclude Include="libs\imgui\imstb_textedit.h" />
     <ClInclude Include="libs\imgui\imstb_truetype.h" />
+    <ClInclude Include="libs\math_def.h" />
     <ClInclude Include="libs\minhook\MinHook.h" />
     <ClInclude Include="libs\utility.hpp" />
+    <ClInclude Include="offsets.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cheat.cpp" />
+    <ClCompile Include="draw.h" />
     <ClCompile Include="entry.cpp" />
+    <ClCompile Include="esp.cpp" />
     <ClCompile Include="libs\imgui\imgui.cpp" />
     <ClCompile Include="libs\imgui\imgui_demo.cpp" />
     <ClCompile Include="libs\imgui\imgui_draw.cpp" />

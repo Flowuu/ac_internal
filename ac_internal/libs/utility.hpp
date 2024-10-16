@@ -35,16 +35,20 @@ private:
 
 public:
 
-	unsigned char* readBytes(uintptr_t pAddress, size_t length) {
+	std::vector<unsigned char> readBytes(uintptr_t pAddress, size_t length) {
 		DWORD pOld;
+		std::vector<unsigned char> cBytes;
 
 		VirtualProtect((void*)pAddress, length, PAGE_EXECUTE_READWRITE, &pOld);
 
-		//finish
+		unsigned char* rBytes = reinterpret_cast<unsigned char*>(pAddress);
+
+		for (size_t i = 0; i < length; ++i)
+			cBytes.push_back(rBytes[i]);
 
 		VirtualProtect((void*)pAddress, length, pOld, NULL);
 
-		return NULL;
+		return cBytes;
 	}
 	
 	bool patchBytes(uintptr_t pAddress, const char* patternBytes) {
@@ -68,6 +72,35 @@ public:
 
 		MODULEINFO moduleInfo;
 		GetModuleInformation(GetCurrentProcess(), GetModuleHandleA(module), &moduleInfo, sizeof(MODULEINFO));
+
+		PIMAGE_NT_HEADERS pNtHeader = (PIMAGE_NT_HEADERS)((BYTE*)moduleInfo.lpBaseOfDll + ((PIMAGE_DOS_HEADER)moduleInfo.lpBaseOfDll)->e_lfanew);
+		uintptr_t PeStart = pNtHeader->OptionalHeader.ImageBase + pNtHeader->OptionalHeader.BaseOfCode;
+		uintptr_t PeEnd = PeStart + pNtHeader->OptionalHeader.SizeOfCode;
+
+		for (uintptr_t i = PeStart; i < PeEnd - patternBytes.size(); i++) {
+			bool pFound = true;
+
+			for (size_t j = 0; j < patternBytes.size(); ++j) {
+
+				if (patternBytes.data()[j] != '\?' && patternBytes.data()[j] != *(unsigned char*)(i + j)) {
+					pFound = false;
+					break;
+				}
+			}
+
+			if (pFound) {
+				return i;
+			}
+		}
+
+		return 0;
+	}
+
+	uintptr_t signatureScanner(uintptr_t module, const char* pattern) {
+		std::vector<unsigned char> patternBytes = patternToBytes(pattern);
+
+		MODULEINFO moduleInfo;
+		GetModuleInformation(GetCurrentProcess(), reinterpret_cast<HMODULE>(module), &moduleInfo, sizeof(MODULEINFO));
 
 		PIMAGE_NT_HEADERS pNtHeader = (PIMAGE_NT_HEADERS)((BYTE*)moduleInfo.lpBaseOfDll + ((PIMAGE_DOS_HEADER)moduleInfo.lpBaseOfDll)->e_lfanew);
 		uintptr_t PeStart = pNtHeader->OptionalHeader.ImageBase + pNtHeader->OptionalHeader.BaseOfCode;

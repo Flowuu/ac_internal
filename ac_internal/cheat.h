@@ -2,6 +2,7 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_opengl2.h>
 #include <imgui/imgui_impl_win32.h>
+#include "offsets.hpp"
 
 namespace cheat
 {
@@ -14,7 +15,7 @@ namespace cheat
 
 	namespace esp
 	{
-
+		void initAll();
 	}
 
 	namespace misc
