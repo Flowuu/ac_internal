@@ -42,18 +42,12 @@ public:
 		ImVec2 pos = { position.x, position.y };
 		ImVec2 pos2 = { position2.x, position2.y };
 
-		drawList->AddLine(ImVec2(pos.x, pos.y - 1), ImVec2(pos.x, pos.y + pos2.y + 1), ImColor(0, 0, 0, 255), thickness + 2); //left top corner to left bottom corner (LEFT SIDE)
-		drawList->AddLine(ImVec2(pos.x, pos.y), ImVec2(pos.x + pos2.x, pos.y), ImColor(0, 0, 0, 255), thickness + 2); //left top corner to right top corner (TOP SIDE)
-		drawList->AddLine(ImVec2(pos.x + pos2.x, pos.y + pos2.y), ImVec2(pos.x + pos2.x, pos.y - 1), ImColor(0, 0, 0, 255), thickness + 2); //right bottom corner to right top corner (RIGHT SIDE)
-		drawList->AddLine(ImVec2(pos.x + pos2.x + 2, pos.y + pos2.y), ImVec2(pos.x, pos.y + pos2.y), ImColor(0, 0, 0, 255), thickness + 2); //right bottom corner to left bottom corner (BOTTOM SIDE)
-
-		drawList->AddLine(ImVec2(pos.x, pos.y), ImVec2(pos.x, pos.y + pos2.y), color, thickness); //left top corner to left bottom corner (LEFT SIDE)
-		drawList->AddLine(ImVec2(pos.x, pos.y), ImVec2(pos.x + pos2.x, pos.y), color, thickness); //left top corner to right top corner (TOP SIDE)
-		drawList->AddLine(ImVec2(pos.x + pos2.x, pos.y + pos2.y), ImVec2(pos.x + pos2.x, pos.y), color, thickness); //right bottom corner to right top corner (RIGHT SIDE)
-		drawList->AddLine(ImVec2(pos.x + pos2.x + 1, pos.y + pos2.y), ImVec2(pos.x, pos.y + pos2.y), color, thickness); //right bottom corner to left bottom corner (BOTTOM SIDE)
+		drawList->AddRect({ position.x + 1, position.y + 1}, { position2.x + 1, position2.y + 1}, ImGui::ColorConvertFloat4ToU32({ 0, 0, 0, color.Value.w }), 0, 0, 1);
+		drawList->AddRect({ position.x - 1, position.y - 1 }, { position2.x - 1, position2.y - 1 }, ImGui::ColorConvertFloat4ToU32({ 0, 0, 0, color.Value.w }), 0, 0, 1);
+		drawList->AddRect({ position.x, position.y }, { position2.x, position2.y }, color, 0, 0, 1);
 	}
 
-	void DrawCorneredBox(vec2 position, ImVec2 position2, float thickness, ImColor color)
+	void corneredBox(vec2 position, vec2 position2, float thickness, ImColor color)
 	{
 		ImDrawList* drawList = ImGui::GetBackgroundDrawList();
 		ImVec2 pos = { position.x, position.y };
@@ -89,7 +83,7 @@ public:
 		ImVec2 pos = { position.x, position.y };
 		ImVec2 pos2 = { position2.x, position2.y };
 
-		drawList->AddRectFilledMultiColor(pos, ImVec2(pos2.x + 100, pos2.y + 100), color, color, color2, color2);
+		drawList->AddRectFilledMultiColor(pos, ImVec2(pos2.x, pos2.y), color, color, color2, color2);
 	}
 
 	void circle(vec2 position, float radius, int segment, ImColor color)

@@ -15,7 +15,7 @@
 #define aMagcontent 0x14		//(**(_DWORD **)(*(_DWORD *)(player + 0x364) + 20));
 #define aAmmo 0x10
 
-#define aName_1 0x205	//*(void **)(v3 + 0x205);
+#define aName_1 0x0205	//*(void **)(v3 + 0x205);
 #define aTeam_1 0x30C
 #define aPing 0x1D0
 #define aPj 0x1CC
@@ -27,9 +27,13 @@
 #define aTks 0x1E8
 #define aAlive 0x76		//((void *)(*(_BYTE *)(v3 + 0x76) == 0));
 
-#define xPosition 0x4
-#define yPosition 0x8
-#define zPosition 0xc
+#define xHeadPosition 0x4
+#define yHeadPosition 0x8
+#define zHeadPosition 0xc
+
+#define xPosition 0x28
+#define yPosition 0x2C
+#define zPosition 0x30
 
 #define xViewAngle 0x34
 #define yViewAngle 0x38
@@ -46,7 +50,7 @@ private:
 public:
 	char* getName()
 	{
-		return *(char**)(this + aName_1);
+		return (char*)(this + aName_1);
 	}
 
 	bool isAlive() {
@@ -65,6 +69,10 @@ public:
 		return *(int*)(this + aArmour);
 	}
 
+	int getTeam() {
+		return *(int*)(this + aTeam_1);
+	}
+
 	bool isAttacking() {
 		return *(bool*)(this + aAttacking);
 	}
@@ -77,9 +85,14 @@ public:
 		return **(bool**)(curWeapon() + aMagcontent);
 	}
 
-	vec3 getPosition()
+	vec3 getFeetPosition()
 	{
 		return { *(float*)(this + xPosition), *(float*)(this + yPosition), *(float*)(this + zPosition) };
+	}
+
+	vec3 getHeadPosition()
+	{
+		return { *(float*)(this + xHeadPosition), *(float*)(this + yHeadPosition), *(float*)(this + zHeadPosition) };
 	}
 
 	vec2 getViewAngle()

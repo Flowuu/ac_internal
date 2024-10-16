@@ -11,6 +11,59 @@ hSDL_SetRelativeMouseMode SDL_SetRelativeMouseMode = (hSDL_SetRelativeMouseMode)
 
 #include "draw.h"
 
+
+void DrawCenteredTimerOnScreen(float duration_in_seconds)
+{
+	static auto start_time = std::chrono::high_resolution_clock::now();
+	auto current_time = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<float> elapsed = current_time - start_time;
+
+	// Calculate progress (elapsed time / total duration)
+	float progress = elapsed.count() / duration_in_seconds;
+
+	// Calculate remaining time in seconds
+	float remaining_time = duration_in_seconds - elapsed.count();
+	if (remaining_time < 0.0f) remaining_time = 0.0f;
+
+	// Clamp progress to the range [0, 1]
+	if (progress > 1.0f)
+	{
+		progress = 1.0f;
+		// Reset the timer
+		start_time = std::chrono::high_resolution_clock::now();  // Reset the timer
+	}
+
+	// Get the foreground draw list to render directly on the screen
+	ImDrawList* draw_list = ImGui::GetForegroundDrawList();
+
+	// Get the screen size
+	ImGuiIO& io = ImGui::GetIO();
+	ImVec2 screen_size = io.DisplaySize;
+
+	// Define the size of the progress bar
+	float line_width = 300.0f;               // Width of the progress line
+	float line_thickness = 1.0f;             // Thickness of the line
+
+	// Lower the vertical position by adjusting the Y-coordinate
+	float vertical_offset = 40.0f;  // Move the line lower by this amount
+	ImVec2 line_start = ImVec2((screen_size.x - line_width) * 0.5f, (screen_size.y * 0.75f) - vertical_offset);
+	ImVec2 line_end = ImVec2(line_start.x + line_width * progress, line_start.y);  // End position based on progress
+
+	// Draw a single progress line centered and lowered on the screen
+	draw_list->AddLine(line_start, line_end, IM_COL32(0, 255, 0, 255), line_thickness);
+
+	// Format the remaining time as a string to display above the line
+	std::string time_text = std::to_string(static_cast<float>(remaining_time)) + " sec";
+
+	// Calculate the position to center the text above the line
+	ImVec2 text_size = ImGui::CalcTextSize(time_text.c_str());
+	ImVec2 text_pos = ImVec2((screen_size.x - text_size.x) * 0.5f, line_start.y - text_size.y - 10.0f);
+
+	// Draw the remaining time text centered and lowered on the screen
+	draw_list->AddText(text_pos, IM_COL32(255, 255, 255, 255), time_text.c_str());
+}
+
+
 bool __stdcall mHookSwapBuff(HDC hdc)
 {
 	ImGuiIO& io = ImGui::GetIO();
@@ -25,6 +78,11 @@ bool __stdcall mHookSwapBuff(HDC hdc)
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	
+	if (offsets.localPlayer->isAttacking())
+	{
+		DrawCenteredTimerOnScreen(2);
+	}
+
 	if (cheat::menu::menuToggle)
 		cheat::menu::mainMenu();
 
@@ -145,6 +203,8 @@ void cheat::menu::initImgui()
 
 	style.SeparatorTextBorderSize = 1;
 	style.SeparatorTextPadding = ImVec2(20, 4);
+
+	ImGui::SetNextWindowSize({ 700, NULL }); // 400
 }
 
 void cheat::menu::closeImgui()

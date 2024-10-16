@@ -36,7 +36,7 @@ void infoDebug()
 
 
 	vec2 vAngle = offsets.localPlayer->getViewAngle();
-	vec3 pos = offsets.localPlayer->getPosition();
+	vec3 pos = offsets.localPlayer->getFeetPosition();
 	iDraw->text({ 0, 75 }, ImColor(0, 0, 255, 255), "[ LOCAL PLAYER ]");
 
 	iDraw->text({ 0, 90 }, ImColor(255, 255, 255, 255), "Name: %s", offsets.localPlayer->getName());
@@ -46,7 +46,7 @@ void infoDebug()
 	iDraw->text({ 0, 150 }, ImColor(255, 255, 255, 255), "getPosition: %f | %f | %f | %f |", pos.x, pos.y, pos.z);
 	//iDraw->text({ 0, 60 }, ImColor(255, 255, 255, 255), "getMagcontent: %d", offsets.localPlayer->getMagcontent());
 	for (int i = 0; i < 16; i++)
-		iDraw->text({ 0, 165 + i * 15.f }, ImColor(255, 255, 255, 255), "matrix  [%d]: %d", i, offsets.matrix[i]);
+		iDraw->text({ 0, 165 + i * 15.f }, ImColor(255, 255, 255, 255), "matrix  [%d]: %f", i, offsets.matrix[i]);
 
 
 	iDraw->text({ 0, 430 }, ImColor(0, 0, 255, 255), "[ LOCAL PLAYER STATE ]");
@@ -58,22 +58,63 @@ void infoDebug()
 
 }
 
-void box(vec2 position, ImColor color)
+void textEsp(pEntity* ent)
 {
-	
+	vec3 feetPosition = ent->getFeetPosition();
+	vec3 headPosition = ent->getHeadPosition();
+	vec2 feetPosition2d;
+	vec2 headPosition2d;
+
+	if (!cUtility.WorldToScreen(feetPosition, feetPosition2d) || !cUtility.WorldToScreen(headPosition, headPosition2d))
+		return;
+
+	float boxWidth = (headPosition2d.y - feetPosition2d.y) / 4;
+
+	if(cheat::esp::name)
+		iDraw->text({ headPosition2d.x + boxWidth, headPosition2d.y + (boxWidth / 3) - 20 }, cheat::esp::nameColor, "%s", ent->getName());
+
+	if (cheat::esp::health)
+		iDraw->text({ headPosition2d.x + boxWidth - 20, headPosition2d.y + (boxWidth / 3)}, cheat::esp::healthColor, "%d", ent->getHealth());
+
+	if (cheat::esp::armour)
+		iDraw->text({ headPosition2d.x + boxWidth - 20, headPosition2d.y + (boxWidth / 3) + 10}, cheat::esp::armourColor, "%d", ent->getArmour());
+}
+
+void boxEsp(pEntity* ent)
+{
+	vec3 feetPosition = ent->getFeetPosition();
+	vec3 headPosition = ent->getHeadPosition();
+	vec2 feetPosition2d;
+	vec2 headPosition2d;
+
+	if (!cUtility.WorldToScreen(feetPosition, feetPosition2d) || !cUtility.WorldToScreen(headPosition, headPosition2d))
+		return;
+
+	float boxWidth = (headPosition2d.y - feetPosition2d.y) / 4;
+
+	if (cheat::esp::box)
+		iDraw->borderedBox({ headPosition2d.x + boxWidth , headPosition2d.y + boxWidth / 3 }, { feetPosition2d.x - boxWidth, feetPosition2d.y }, 1, cheat::esp::boxColor);
+
+	if (cheat::esp::fillBox)
+		iDraw->rectMultiColor({ headPosition2d.x + boxWidth , headPosition2d.y + boxWidth / 3 }, { feetPosition2d.x - boxWidth, feetPosition2d.y }, cheat::esp::fillBoxTopColor, cheat::esp::fillBoxBottomColor);
+
 }
 
 void cheat::esp::initAll()
 {
-	//infoDebug();
+	infoDebug();
 	//iDrawDebug();
 
 	for (pEntity* ent : offsets.getEntity())
 	{
-		vec3 pos3d = ent->getPosition();
-		vec2 pos2d;
+		if (!cheat::esp::enable || ent == offsets.localPlayer)
+			continue;
 
-		if (cUtility.WorldToScreen(pos3d, pos2d))
-			iDraw->circle(pos2d, 5, 6, ImColor(255, 0, 255, 255));
+		if (cheat::esp::teamCheck)
+			if (ent->getTeam() == offsets.localPlayer->getTeam())
+				continue;
+
+		textEsp(ent);
+		boxEsp(ent);
 	}
 }
