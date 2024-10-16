@@ -4,8 +4,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <math.h>
-#include <utility.hpp>
-#include <flogger.hpp>
 #define M_PI 3.14159265f
 #define RAD_TO_DEG(x) (x * (180.0f / M_PI))
 #define DEG_TO_RAD(x) (x * (M_PI / 180.0f))
@@ -88,33 +86,5 @@ struct vec2
 
     float dist2D(const vec2& ape) const { return (*this - ape).length2D(); }
 };
-
-
-class viewMatrix
-{
-public:
-    float* matrix = *reinterpret_cast<float**>(cUtility.signatureScanner("ac_client.exe", "50 68 ? ? ? ? E8 42 CE FF FF 8B C1 8D 54 24") + 2);
-
-    int windowHeight = **reinterpret_cast<int**>(cUtility.signatureScanner("ac_client.exe", "03 0D ? ? ? ? 8B 35 ? ? ? ? D3 E3 8B 0D ? ? ? ? 90") + 8);
-    int windowWidth = **reinterpret_cast<int**>(cUtility.signatureScanner("ac_client.exe", "03 0D ? ? ? ? 8B 35 ? ? ? ? D3 E3 8B 0D ? ? ? ? 90") + 16);
-
-    bool WorldToScreen(vec3 pos, vec2& screen)
-    {
-        vec4 clipCoords;
-        clipCoords.w = pos.x * matrix[3] + pos.y * matrix[7] + pos.z * matrix[11] + matrix[15];
-        if (clipCoords.w < 0.1f)
-            return false;
-
-        clipCoords.x = pos.x * matrix[0] + pos.y * matrix[4] + pos.z * matrix[8] + matrix[12];
-        clipCoords.y = pos.x * matrix[1] + pos.y * matrix[5] + pos.z * matrix[9] + matrix[13];
-        clipCoords.z = pos.x * matrix[2] + pos.y * matrix[6] + pos.z * matrix[10] + matrix[14];
-
-        screen.x = (windowWidth / 2.0f) * (clipCoords.x / clipCoords.w + 1.0f);
-        screen.y = (windowHeight / 2.0f) * (1.0f - clipCoords.y / clipCoords.w);
-
-        return true;
-    }
-
-}; inline viewMatrix vMatrix;
 
 #endif // !math_def_h

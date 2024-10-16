@@ -13,22 +13,20 @@ hSDL_SetRelativeMouseMode SDL_SetRelativeMouseMode = (hSDL_SetRelativeMouseMode)
 
 bool __stdcall mHookSwapBuff(HDC hdc)
 {
+	ImGuiIO& io = ImGui::GetIO();
+
 	if (GetAsyncKeyState(VK_INSERT) & 1)
 		cheat::menu::menuToggle = !cheat::menu::menuToggle;
+
 	SDL_SetRelativeMouseMode(!cheat::menu::menuToggle);
+	io.MouseDrawCursor = cheat::menu::menuToggle;
 
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-
-	ImGuiIO& io = ImGui::GetIO();
-
-	if(cheat::menu::menuToggle)
-	{
-		io.MouseDrawCursor = cheat::menu::menuToggle;
-
-		ImGui::ShowDemoWindow();
-	}
+	
+	if (cheat::menu::menuToggle)
+		cheat::menu::mainMenu();
 
 	cheat::esp::initAll();
 
@@ -158,6 +156,8 @@ void cheat::menu::closeImgui()
 
 void cheat::initAll()
 {
+	offsets.init();
+
 	cheat::menu::initImgui();
 
 	mHook.init(oSwapBuff, &mHookSwapBuff, reinterpret_cast<void**>(&oSwapBuff));

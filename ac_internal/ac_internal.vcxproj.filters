@@ -63,7 +63,7 @@
     <ClInclude Include="libs\utility.hpp">
       <Filter>Libs</Filter>
     </ClInclude>
-    <ClInclude Include="offsets.hpp">
+    <ClInclude Include="offsets.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="libs\math_def.h">
@@ -103,6 +103,12 @@
     </ClCompile>
     <ClCompile Include="draw.h">
       <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="offset.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="menu.cpp">
+      <Filter>Cheat</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

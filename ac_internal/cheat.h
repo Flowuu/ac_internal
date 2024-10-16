@@ -2,7 +2,7 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_opengl2.h>
 #include <imgui/imgui_impl_win32.h>
-#include "offsets.hpp"
+#include "offsets.h"
 
 namespace cheat
 {
@@ -10,17 +10,19 @@ namespace cheat
 
 	namespace aimbot
 	{
-
+		inline bool enable = true;
 	}
 
 	namespace esp
 	{
 		void initAll();
+
+		inline bool enable = true;
 	}
 
 	namespace misc
 	{
-
+		inline bool enable = true;
 	}
 
 	namespace menu
@@ -28,6 +30,7 @@ namespace cheat
 		void initImgui();
 		void closeImgui();
 
-		inline bool menuToggle = false;
+		void mainMenu();
+		inline bool menuToggle = true;
 	}
 }

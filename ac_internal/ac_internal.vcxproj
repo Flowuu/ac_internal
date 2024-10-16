@@ -150,7 +150,7 @@
     <ClInclude Include="libs\math_def.h" />
     <ClInclude Include="libs\minhook\MinHook.h" />
     <ClInclude Include="libs\utility.hpp" />
-    <ClInclude Include="offsets.hpp" />
+    <ClInclude Include="offsets.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cheat.cpp" />
@@ -164,6 +164,8 @@
     <ClCompile Include="libs\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="libs\imgui\imgui_tables.cpp" />
     <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="menu.cpp" />
+    <ClCompile Include="offset.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\minhook\libMinHook.x86.lib" />

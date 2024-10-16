@@ -11,7 +11,8 @@ class utility
 {
 
 private:
-	std::vector<unsigned char> patternToBytes(const char* pattern) {
+	std::vector<unsigned char> patternToBytes(const char* pattern)
+	{
 		std::vector<unsigned char> bytes;
 		char* start = const_cast<char*>(pattern);
 		char* end = const_cast<char*>(pattern) + strlen(pattern);
@@ -35,7 +36,8 @@ private:
 
 public:
 
-	std::vector<unsigned char> readBytes(uintptr_t pAddress, size_t length) {
+	std::vector<unsigned char> readBytes(uintptr_t pAddress, size_t length)
+	{
 		DWORD pOld;
 		std::vector<unsigned char> cBytes;
 
@@ -51,7 +53,8 @@ public:
 		return cBytes;
 	}
 	
-	bool patchBytes(uintptr_t pAddress, const char* patternBytes) {
+	bool patchBytes(uintptr_t pAddress, const char* patternBytes)
+	{
 		DWORD pOld;
 		std::vector<unsigned char> cBytes = patternToBytes(patternBytes);
 
@@ -67,7 +70,8 @@ public:
 		return true;
 	}
 
-	uintptr_t signatureScanner(const char* module, const char* pattern) {
+	uintptr_t signatureScanner(const char* module, const char* pattern)
+	{
 		std::vector<unsigned char> patternBytes = patternToBytes(pattern);
 
 		MODULEINFO moduleInfo;
@@ -77,26 +81,29 @@ public:
 		uintptr_t PeStart = pNtHeader->OptionalHeader.ImageBase + pNtHeader->OptionalHeader.BaseOfCode;
 		uintptr_t PeEnd = PeStart + pNtHeader->OptionalHeader.SizeOfCode;
 
-		for (uintptr_t i = PeStart; i < PeEnd - patternBytes.size(); i++) {
+		for (uintptr_t i = PeStart; i < PeEnd - patternBytes.size(); i++)
+		{
 			bool pFound = true;
 
-			for (size_t j = 0; j < patternBytes.size(); ++j) {
+			for (size_t j = 0; j < patternBytes.size(); ++j)
+			{
 
-				if (patternBytes.data()[j] != '\?' && patternBytes.data()[j] != *(unsigned char*)(i + j)) {
+				if (patternBytes.data()[j] != '\?' && patternBytes.data()[j] != *(unsigned char*)(i + j))
+				{
 					pFound = false;
 					break;
 				}
 			}
 
-			if (pFound) {
+			if (pFound) 
 				return i;
-			}
 		}
 
 		return 0;
 	}
 
-	uintptr_t signatureScanner(uintptr_t module, const char* pattern) {
+	uintptr_t signatureScanner(uintptr_t module, const char* pattern)
+	{
 		std::vector<unsigned char> patternBytes = patternToBytes(pattern);
 
 		MODULEINFO moduleInfo;
@@ -106,23 +113,42 @@ public:
 		uintptr_t PeStart = pNtHeader->OptionalHeader.ImageBase + pNtHeader->OptionalHeader.BaseOfCode;
 		uintptr_t PeEnd = PeStart + pNtHeader->OptionalHeader.SizeOfCode;
 
-		for (uintptr_t i = PeStart; i < PeEnd - patternBytes.size(); i++) {
+		for (uintptr_t i = PeStart; i < PeEnd - patternBytes.size(); i++)
+		{
 			bool pFound = true;
 
-			for (size_t j = 0; j < patternBytes.size(); ++j) {
+			for (size_t j = 0; j < patternBytes.size(); ++j)
+			{
 
-				if (patternBytes.data()[j] != '\?' && patternBytes.data()[j] != *(unsigned char*)(i + j)) {
+				if (patternBytes.data()[j] != '\?' && patternBytes.data()[j] != *(unsigned char*)(i + j))
+				{
 					pFound = false;
 					break;
 				}
 			}
 
-			if (pFound) {
+			if (pFound)
 				return i;
-			}
 		}
 
 		return 0;
+	}
+
+	bool WorldToScreen(vec3 pos, vec2& screen)
+	{
+		vec4 clipCoords;
+		clipCoords.w = pos.x * offsets.matrix[3] + pos.y * offsets.matrix[7] + pos.z * offsets.matrix[11] + offsets.matrix[15];
+		if (clipCoords.w < 0.1f)
+			return false;
+
+		clipCoords.x = pos.x * offsets.matrix[0] + pos.y * offsets.matrix[4] + pos.z * offsets.matrix[8] + offsets.matrix[12];
+		clipCoords.y = pos.x * offsets.matrix[1] + pos.y * offsets.matrix[5] + pos.z * offsets.matrix[9] + offsets.matrix[13];
+		clipCoords.z = pos.x * offsets.matrix[2] + pos.y * offsets.matrix[6] + pos.z * offsets.matrix[10] + offsets.matrix[14];
+
+		screen.x = (offsets.windowWidth / 2.0f) * (clipCoords.x / clipCoords.w + 1.0f);
+		screen.y = (offsets.windowHeight / 2.0f) * (1.0f - clipCoords.y / clipCoords.w);
+
+		return true;
 	}
 
 }; inline utility cUtility;

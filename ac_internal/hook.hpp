@@ -8,8 +8,8 @@
 class hook
 {
 public:
-	void init(void* targetFunction, void* DetourFunction, void** ppOriginal) {
-
+	void init(void* targetFunction, void* DetourFunction, void** ppOriginal)
+	{
 		if (MH_Initialize() == MH_OK)
 			console.logWithTitle(logLevel::INFO, "MinHook", "Initialized.");
 
