@@ -110,6 +110,12 @@
     <ClCompile Include="menu.cpp">
       <Filter>Cheat</Filter>
     </ClCompile>
+    <ClCompile Include="aimbot.cpp">
+      <Filter>Cheat</Filter>
+    </ClCompile>
+    <ClCompile Include="misc.cpp">
+      <Filter>Cheat</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\minhook\libMinHook.x86.lib">

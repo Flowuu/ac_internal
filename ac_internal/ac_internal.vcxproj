@@ -153,6 +153,7 @@
     <ClInclude Include="offsets.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="aimbot.cpp" />
     <ClCompile Include="cheat.cpp" />
     <ClCompile Include="draw.h" />
     <ClCompile Include="entry.cpp" />
@@ -165,6 +166,7 @@
     <ClCompile Include="libs\imgui\imgui_tables.cpp" />
     <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
     <ClCompile Include="menu.cpp" />
+    <ClCompile Include="misc.cpp" />
     <ClCompile Include="offset.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,7 @@
 #include <cstdarg>
 #include <cstdio>
 #include <math_def.h>
+#include <chrono>
 
 class draw
 {
@@ -101,6 +102,70 @@ public:
 		ImVec2 pos2 = ImVec2( position2.x, position2.y);
 
 		drawList->AddLine(pos, pos2, color);
+	}
+
+	void drawTimerLine(vec2 position, vec2 position2, float durationSecond, float lineThickness, bool followLine, ImColor color)
+	{
+		ImDrawList* drawList = ImGui::GetBackgroundDrawList();
+		static auto start_time = std::chrono::high_resolution_clock::now();
+		auto current_time = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<float> elapsed = current_time - start_time;
+
+		float progress = elapsed.count() / durationSecond;
+		float remainingTime = durationSecond - elapsed.count();
+
+		if (remainingTime == 0.0f) return;
+
+		if (remainingTime <= 0.0f)
+		{
+			remainingTime = 0.0f;
+			progress = 1.0f;
+		}
+
+		float lineWidth = position2.x - position.x;  // Calculate width based on position
+
+		ImVec2 lineStart = ImVec2(position.x, position.y);
+		ImVec2 lineEnd = ImVec2(lineStart.x + lineWidth * progress, lineStart.y);
+		ImVec2 lineFullEnd = ImVec2(lineStart.x + lineWidth, lineStart.y);
+
+		// Draw the black background line
+		drawList->AddLine(lineStart, lineFullEnd, ImColor(0, 0, 0, 255), lineThickness + 2.0f);
+
+		// Draw the progress line ensuring it does not overlap the black line
+		drawList->AddLine({ lineStart.x + 1, lineStart.y }, { lineEnd.x - 1, lineEnd.y }, color, lineThickness);
+
+		char time_text[16];
+		snprintf(time_text, sizeof(time_text), "%.1f sec", remainingTime);
+
+		ImVec2 textSize = ImGui::CalcTextSize(time_text);
+		ImVec2 textPos;
+
+		if (followLine)
+			textPos = lineEnd;
+		else
+			textPos = ImVec2(lineStart.x + (lineWidth - textSize.x) * 0.5f, lineStart.y - textSize.y - 10.0f);
+
+		drawList->AddText(textPos, ImColor(255, 255, 255, 255), time_text);
+
+		if (remainingTime == 0.0f)
+		{
+			start_time = std::chrono::high_resolution_clock::now();
+		}
+	}
+
+	void drawTimerLine(vec2 position, float durationSecond, ImColor color)
+	{
+		float lineWidth = 300.0f;  // Desired width of the timer line
+		float lineThickness = 1.0f;
+		bool followLine = false;
+
+		// Center the start position by moving it to the left by half the line width
+		vec2 centeredPosition = vec2(position.x - lineWidth / 2, position.y);
+
+		// Calculate position2 as the endpoint, based on the centered start position
+		vec2 position2 = vec2(centeredPosition.x + lineWidth, centeredPosition.y);
+
+		drawTimerLine(centeredPosition, position2, durationSecond, lineThickness, followLine, color);
 	}
 
 }; inline draw* iDraw;

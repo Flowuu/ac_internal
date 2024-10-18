@@ -44,9 +44,9 @@ void infoDebug()
 	iDraw->text({ 0, 120 }, ImColor(255, 255, 255, 255), "getArmour: %d", offsets.localPlayer->getArmour());
 	iDraw->text({ 0, 135 }, ImColor(255, 255, 255, 255), "getViewAngle: %f | %f ", vAngle.x, vAngle.y);
 	iDraw->text({ 0, 150 }, ImColor(255, 255, 255, 255), "getPosition: %f | %f | %f | %f |", pos.x, pos.y, pos.z);
-	//iDraw->text({ 0, 60 }, ImColor(255, 255, 255, 255), "getMagcontent: %d", offsets.localPlayer->getMagcontent());
+	iDraw->text({ 0, 165 }, ImColor(255, 255, 255, 255), "getWeaponId: %d", offsets.localPlayer->getWeaponId());
 	for (int i = 0; i < 16; i++)
-		iDraw->text({ 0, 165 + i * 15.f }, ImColor(255, 255, 255, 255), "matrix  [%d]: %f", i, offsets.matrix[i]);
+		iDraw->text({ 0, 180 + i * 15.f }, ImColor(255, 255, 255, 255), "matrix  [%d]: %f", i, offsets.matrix[i]);
 
 
 	iDraw->text({ 0, 430 }, ImColor(0, 0, 255, 255), "[ LOCAL PLAYER STATE ]");
@@ -54,8 +54,8 @@ void infoDebug()
 	iDraw->text({ 0, 445 }, ImColor(255, 255, 255, 255), "isAttacking: %d", offsets.localPlayer->isAttacking());
 	iDraw->text({ 0, 460 }, ImColor(255, 255, 255, 255), "isAlive: %d", offsets.localPlayer->isAlive());
 	iDraw->text({ 0, 475 }, ImColor(255, 255, 255, 255), "playerState: %d", offsets.localPlayer->playerState());
-
-
+	iDraw->text({ 0, 490 }, ImColor(255, 255, 255, 255), "isReloading: %d", offsets.localPlayer->isReloading());
+	iDraw->text({ 0, 505 }, ImColor(255, 255, 255, 255), "getWeaponId: %d", offsets.localPlayer->getWeaponId());
 }
 
 void textEsp(pEntity* ent)
@@ -68,16 +68,22 @@ void textEsp(pEntity* ent)
 	if (!cUtility.WorldToScreen(feetPosition, feetPosition2d) || !cUtility.WorldToScreen(headPosition, headPosition2d))
 		return;
 
-	float boxWidth = (headPosition2d.y - feetPosition2d.y) / 4;
+	float calc = (headPosition2d.y - feetPosition2d.y) / 4;
 
 	if(cheat::esp::name)
-		iDraw->text({ headPosition2d.x + boxWidth, headPosition2d.y + (boxWidth / 3) - 20 }, cheat::esp::nameColor, "%s", ent->getName());
+		if (cheat::esp::visible)
+			if(offsets.isVisible(ent))
+				iDraw->text({ headPosition2d.x + calc, headPosition2d.y + (calc / 3) - 20 }, cheat::esp::nameColor, "%s", ent->getName());
+			else
+				iDraw->text({ headPosition2d.x + calc, headPosition2d.y + (calc / 3) - 20 }, cheat::esp::InvisibleNameColor, "%s", ent->getName());
+		else
+			iDraw->text({ headPosition2d.x + calc, headPosition2d.y + (calc / 3) - 20 }, cheat::esp::nameColor, "%s", ent->getName());
 
 	if (cheat::esp::health)
-		iDraw->text({ headPosition2d.x + boxWidth - 20, headPosition2d.y + (boxWidth / 3)}, cheat::esp::healthColor, "%d", ent->getHealth());
+		iDraw->text({ headPosition2d.x + calc - 21, headPosition2d.y + (calc / 3)}, cheat::esp::healthColor, "%d", ent->getHealth());
 
 	if (cheat::esp::armour)
-		iDraw->text({ headPosition2d.x + boxWidth - 20, headPosition2d.y + (boxWidth / 3) + 10}, cheat::esp::armourColor, "%d", ent->getArmour());
+		iDraw->text({ headPosition2d.x + calc - 21, headPosition2d.y + (calc / 3) + 10}, cheat::esp::armourColor, "%d", ent->getArmour());
 }
 
 void boxEsp(pEntity* ent)
@@ -93,11 +99,30 @@ void boxEsp(pEntity* ent)
 	float boxWidth = (headPosition2d.y - feetPosition2d.y) / 4;
 
 	if (cheat::esp::box)
-		iDraw->borderedBox({ headPosition2d.x + boxWidth , headPosition2d.y + boxWidth / 3 }, { feetPosition2d.x - boxWidth, feetPosition2d.y }, 1, cheat::esp::boxColor);
+	{
+		if (cheat::esp::visible)
+		{
+			if(offsets.isVisible(ent))
+				iDraw->borderedBox({ headPosition2d.x + boxWidth , headPosition2d.y + boxWidth / 3 }, { feetPosition2d.x - boxWidth, feetPosition2d.y }, 1, cheat::esp::boxColor);
+			else
+				iDraw->borderedBox({ headPosition2d.x + boxWidth , headPosition2d.y + boxWidth / 3 }, { feetPosition2d.x - boxWidth, feetPosition2d.y }, 1, cheat::esp::InvisibleboxColor);
+		}
+		else
+			iDraw->borderedBox({ headPosition2d.x + boxWidth , headPosition2d.y + boxWidth / 3 }, { feetPosition2d.x - boxWidth, feetPosition2d.y }, 1, cheat::esp::boxColor);
+	}
 
 	if (cheat::esp::fillBox)
-		iDraw->rectMultiColor({ headPosition2d.x + boxWidth , headPosition2d.y + boxWidth / 3 }, { feetPosition2d.x - boxWidth, feetPosition2d.y }, cheat::esp::fillBoxTopColor, cheat::esp::fillBoxBottomColor);
-
+	{
+		if (cheat::esp::visible)
+		{
+			if (offsets.isVisible(ent))
+				iDraw->rectMultiColor({ headPosition2d.x + boxWidth , headPosition2d.y + boxWidth / 3 }, { feetPosition2d.x - boxWidth, feetPosition2d.y }, cheat::esp::fillBoxTopColor, cheat::esp::fillBoxBottomColor);
+			else
+				iDraw->rectMultiColor({ headPosition2d.x + boxWidth , headPosition2d.y + boxWidth / 3 }, { feetPosition2d.x - boxWidth, feetPosition2d.y }, cheat::esp::InvisibleFillBoxTopColor, cheat::esp::InvisibleFillBoxBottomColor);
+		}
+		else
+			iDraw->rectMultiColor({ headPosition2d.x + boxWidth , headPosition2d.y + boxWidth / 3 }, { feetPosition2d.x - boxWidth, feetPosition2d.y }, cheat::esp::fillBoxTopColor, cheat::esp::fillBoxBottomColor);
+	}
 }
 
 void cheat::esp::initAll()
@@ -107,7 +132,7 @@ void cheat::esp::initAll()
 
 	for (pEntity* ent : offsets.getEntity())
 	{
-		if (!cheat::esp::enable || ent == offsets.localPlayer)
+		if (!cheat::esp::enable || ent->getHealth() <= 0)
 			continue;
 
 		if (cheat::esp::teamCheck)
