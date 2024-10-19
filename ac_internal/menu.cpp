@@ -88,11 +88,6 @@ void espSubMenu()
 			ImGui::ColorEdit4("Invisible fill box color | bottom", (float*)(&cheat::esp::InvisibleboxColor), ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_NoInputs);
 		}
 	}
-
-	if (true)
-	{
-
-	}
 }
 
 void miscSubMenu()
@@ -121,6 +116,7 @@ void miscSubMenu()
 		ImGui::ColorEdit4("Reload Timer Color", (float*)(&cheat::misc::reloadTimerColor), ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_NoInputs);
 
 	ImGui::Checkbox("Player list", &cheat::misc::playerList);
+
 }
 
 void playerListWindow()

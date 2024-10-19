@@ -17,10 +17,9 @@ void nAimbot(pEntity* ent)
 
 void sAimbot(pEntity* ent)
 {
-	vec3 oldPos = ent->getHeadPosition();
-
-	if(offsets.localPlayer->isAttacking())
-		offsets.localPlayer->setHeadPosition({ oldPos.x, oldPos.y, oldPos.z });
+	vec3 headPos = ent->getHeadPosition();
+	vec3 feetPos = ent->getFeetPosition();
+	offsets.localPlayer->setHeadPosition({ headPos.x, headPos.y, (headPos.z + feetPos.z) / 2 });
 }
 
 void cheat::aimbot::initAll()
@@ -33,7 +32,7 @@ void cheat::aimbot::initAll()
 
 	pEntity* ent = offsets.getClosedTarget();
 
-	if (ent == NULL || !offsets.localPlayer->isAttacking())
+	if (ent == NULL )
 		return;
 
 	if (cheat::esp::teamCheck)
@@ -43,6 +42,9 @@ void cheat::aimbot::initAll()
 	if (cheat::aimbot::visible)
 		if (!offsets.isVisible(ent))
 			return;
+
+	if (!GetAsyncKeyState(VK_LBUTTON))
+		return;
 
 	if (cheat::aimbot::silent)
 		sAimbot(ent);

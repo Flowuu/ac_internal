@@ -66,6 +66,17 @@ private:
 		return *(uintptr_t*)(this + 0x364);
 	}
 
+	char* iptoa(uint32_t ip)
+	{
+		char formattedIP[16]; // Renamed to avoid conflicts
+		std::snprintf(formattedIP, sizeof(formattedIP), "%d.%d.%d.%d",
+			(ip >> 24) & 255,
+			(ip >> 16) & 255,
+			(ip >> 8) & 255,
+			ip & 255);
+		return formattedIP;
+	}
+#define ATTR_STR(name, attribute)    if(!strcmp(attr, #name)) { result(attribute); return; }
 public:
 	char* getName()
 	{

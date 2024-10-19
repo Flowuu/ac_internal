@@ -86,6 +86,36 @@ void textEsp(pEntity* ent)
 		iDraw->text({ headPosition2d.x + calc - 21, headPosition2d.y + (calc / 3) + 10}, cheat::esp::armourColor, "%d", ent->getArmour());
 }
 
+vec3 AngleToDirection(vec2 viewAngle) {
+	vec3 direction;
+	float pitch = viewAngle.x * 3.14159265359f / 180.0f;
+	float yaw = viewAngle.y * 3.14159265359f / 180.0f;
+
+	direction.x = cosf(pitch) * cosf(yaw);
+	direction.y = cosf(pitch) * sinf(yaw);
+	direction.z = -sinf(pitch); // In most game engines, negative pitch means looking up
+
+	return direction;
+}
+
+void DrawAimLine(vec3 playerPos, vec2 viewAngle, float length, ImColor color) {
+
+	vec3 direction = AngleToDirection(viewAngle);
+	float lineLength = length; // The length of the view line
+	vec3 endPoint = {
+		playerPos.x + direction.x * lineLength,
+		playerPos.y + direction.y * lineLength,
+		playerPos.z + direction.z * lineLength
+	};
+
+	// Project the player's position and the end point to screen space
+	vec2 playerScreenPos, endScreenPos;
+	if (cUtility.WorldToScreen(playerPos, playerScreenPos) && cUtility.WorldToScreen(endPoint, endScreenPos)) {
+		// Draw a line representing the player's view angle
+		iDraw->line({ playerScreenPos.x, playerScreenPos.y }, { endScreenPos.x, endScreenPos.y}, color); // Green line
+	}
+}
+
 void boxEsp(pEntity* ent)
 {
 	vec3 feetPosition = ent->getFeetPosition();
@@ -127,7 +157,7 @@ void boxEsp(pEntity* ent)
 
 void cheat::esp::initAll()
 {
-	infoDebug();
+	//infoDebug();
 	//iDrawDebug();
 
 	for (pEntity* ent : offsets.getEntity())
@@ -139,6 +169,8 @@ void cheat::esp::initAll()
 			if (ent->getTeam() == offsets.localPlayer->getTeam())
 				continue;
 
+		DrawAimLine(ent->getHeadPosition(), ent->getViewAngle(), 5, ImColor(255, 255, 255, 255));
+		DrawAimLine(ent->getHeadPosition(), { -ent->getViewAngle().x , -ent->getViewAngle().y}, 1, ImColor(255, 0, 0, 255));
 		textEsp(ent);
 		boxEsp(ent);
 	}
