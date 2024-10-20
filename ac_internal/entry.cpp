@@ -7,11 +7,8 @@
 void closeAll(HINSTANCE hinstDll)
 {
 	console.report(logLevel::WARNING, "Detaching ac_internal.dll");
-
 	Sleep(1500);
-
 	cheat::menu::closeImgui();
-
 	mHook.closeHook();
 	console.close();
 	FreeLibraryAndExitThread(hinstDll, 0);
@@ -23,7 +20,6 @@ void initAll(HINSTANCE hinstDll)
 	console.toggleTimestamp();
 	console.report(logLevel::Success, "Injected.");
 	console.toggleTimestamp();
-
 	cheat::initAll();
 
 	while (!GetAsyncKeyState(VK_END));
@@ -31,7 +27,7 @@ void initAll(HINSTANCE hinstDll)
 	closeAll(hinstDll);
 }
 
-bool WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason,  LPVOID lpReserved)
+bool WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, LPVOID lpReserved)
 {
 	DisableThreadLibraryCalls(hinstDll);
 

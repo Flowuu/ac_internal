@@ -8,33 +8,45 @@ void cheat::misc::initAll()
 		return;
 
 	if (cheat::misc::infiniteAmmo)
-			offsets.localPlayer->setAmmo(100);
+		offsets.localPlayer->setAmmo(100);
 
-	if (cheat::misc::infinitHealth)
-		
-		offsets.localPlayer->setHealth(999);
+	if (cheat::misc::infiniteHealth)
+		offsets.localPlayer->setHealth(100);
 
 	if (cheat::misc::noRecoil)
 	{
-		vec2 curAngle = offsets.localPlayer->getViewAngle();
-		offsets.localPlayer->setViewAngle(curAngle);
+		bool patched = false;
+		if (!patched)
+		{
+			cUtility.patchBytes(offsets.spreadfunc, "C2 08 00");
+			patched = true;
+		}
+	}
+	else
+	{
+		bool patched = false;
+		if (!patched)
+		{
+			cUtility.patchBytes(offsets.spreadfunc, "83 EC 28");
+			patched = true;
+		}
 	}
 
 	if (cheat::misc::rapidFire)
 		offsets.localPlayer->setWeaponCooldDown(cheat::misc::rapidFireCooldown);
 
-	if(cheat::misc::nadeTimer)
+	if (cheat::misc::nadeTimer)
 		if (offsets.localPlayer->getWeaponId() == 7 && offsets.localPlayer->isAttacking())
-            iDraw->drawTimerLine({ (float)offsets.windowWidth / 2, (float)offsets.windowHeight / 2 }, 2, cheat::misc::nadeTimerColor);
+			iDraw->drawTimerLine({ (float)offsets.windowWidth / 2, (float)offsets.windowHeight / 2 }, 2, cheat::misc::nadeTimerColor);
 
 	if (cheat::misc::reloadTimer)
 		if (offsets.localPlayer->isReloading() != 0)
 			if (offsets.localPlayer->getWeaponId() == weaponIds::PISTOL)
-				iDraw->drawTimerLine({ (float)offsets.windowWidth / 2, (float)offsets.windowHeight / 2 + 20}, 1.5, cheat::misc::reloadTimerColor);
+				iDraw->drawTimerLine({ (float)offsets.windowWidth / 2, (float)offsets.windowHeight / 2 + 20 }, 1.5, cheat::misc::reloadTimerColor);
 			else if (offsets.localPlayer->getWeaponId() == weaponIds::AKIMBO)
 				iDraw->drawTimerLine({ (float)offsets.windowWidth / 2, (float)offsets.windowHeight / 2 + 20 }, 1.5, cheat::misc::reloadTimerColor);
-			else if(offsets.localPlayer->getWeaponId() == weaponIds::SUBMACHINE)
-				iDraw->drawTimerLine({ (float)offsets.windowWidth / 2, (float)offsets.windowHeight / 2 + 20}, 1.6, cheat::misc::reloadTimerColor);
+			else if (offsets.localPlayer->getWeaponId() == weaponIds::SUBMACHINE)
+				iDraw->drawTimerLine({ (float)offsets.windowWidth / 2, (float)offsets.windowHeight / 2 + 20 }, 1.6, cheat::misc::reloadTimerColor);
 			else if (offsets.localPlayer->getWeaponId() == weaponIds::CARBINE)
 				iDraw->drawTimerLine({ (float)offsets.windowWidth / 2, (float)offsets.windowHeight / 2 + 20 }, 1.8, cheat::misc::reloadTimerColor);
 			else if (offsets.localPlayer->getWeaponId() == weaponIds::ASSAULT_RIFLE)

@@ -7,7 +7,7 @@ typedef bool(__stdcall* glSwapBuff)(HDC hdc);
 typedef int(*hSDL_SetRelativeMouseMode)(int);
 
 glSwapBuff oSwapBuff = (glSwapBuff)GetProcAddress(GetModuleHandle(L"opengl32.dll"), "wglSwapBuffers");
-hSDL_SetRelativeMouseMode SDL_SetRelativeMouseMode = (hSDL_SetRelativeMouseMode)(GetProcAddress(GetModuleHandle(L"SDL2.dll"), "SDL_SetRelativeMouseMode"));
+hSDL_SetRelativeMouseMode SDL_SetRelativeMouseMode = (hSDL_SetRelativeMouseMode)GetProcAddress(GetModuleHandle(L"SDL2.dll"), "SDL_SetRelativeMouseMode");
 
 bool __stdcall mHookSwapBuff(HDC hdc)
 {
@@ -152,14 +152,12 @@ void cheat::menu::initImgui()
 void cheat::menu::closeImgui()
 {
 	SDL_SetRelativeMouseMode(true);
-
 	SetWindowLongPtr(FindWindowA(NULL, "AssaultCube"), GWLP_WNDPROC, (DWORD)oWindProc);
 }
 
 void cheat::initAll()
 {
 	offsets.init();
-
 	cheat::menu::initImgui();
 	mHook.init(oSwapBuff, &mHookSwapBuff, reinterpret_cast<void**>(&oSwapBuff));
 }

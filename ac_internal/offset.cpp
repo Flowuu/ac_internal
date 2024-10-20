@@ -4,7 +4,7 @@
 
 void offset::init()
 {
-	offset::intersectGeometryPtr = cUtility.signatureScanner("ac_client.exe", "55 8B EC 83 E4 ? 81 EC ? ? ? ? 53 8B DA 8B D1");;
+	offset::intersectGeometryPtr = cUtility.signatureScanner("ac_client.exe", "55 8B EC 83 E4 ? 81 EC ? ? ? ? 53 8B DA 8B D1");
 	if (offset::intersectGeometryPtr == NULL)
 		console.report(logLevel::ERR, "offset::intersectGeometryPtr not found.");
 
@@ -31,6 +31,10 @@ void offset::init()
 	offset::windowWidth = **reinterpret_cast<int**>(cUtility.signatureScanner("ac_client.exe", "03 0D ? ? ? ? 8B 35 ? ? ? ? D3 E3 8B 0D ? ? ? ? 90") + 16);
 	if (offset::windowWidth == NULL)
 		console.report(logLevel::ERR, "offset::windowWidth not found.");
+
+	offset::spreadfunc = cUtility.signatureScanner("ac_client.exe", "83 EC ? 53 55 8B 6C ? ? 56 57 8B F9");
+	if (offset::spreadfunc == NULL)
+		console.report(logLevel::ERR, "offset::spreadfunc not found.");
 }
 
 std::vector<pEntity*> offset::getEntity()

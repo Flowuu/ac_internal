@@ -7,12 +7,11 @@
 
 #define aHealth 0xEC
 #define aArmour 0xF0
-#define aAttacking 0x204	//sub_4D68A0(*(unsigned __int8*)(v3 + 516));
-#define aScoping 0x66		//sub_4D68A0(*(unsigned __int8 *)(v3 + 102));
-
-#define aCurweaponId 0x4	//(*(void **)(*(_DWORD *)(v3 + 0x364) + 4));
+#define aAttacking 0x204
+#define aScoping 0x66
+#define aCurweaponId 0x4
 #define aAmmo 0x10
-#define aMagcontent 0x14		//(**(_DWORD **)(*(_DWORD *)(player + 0x364) + 20));
+#define aMagcontent 0x14
 #define aReload 0x20
 #define aShots 0x124
 #define aShotCooldown 0x18
@@ -21,30 +20,60 @@
 #define aDamage 0x10C
 #define aReloadTime 0x108
 #define aSound 0x104
-
-#define aName_1 0x205	//*(void **)(v3 + 0x205);
+#define aName_1 0x205
 #define aTeam_1 0x30C
 #define aPing 0x1D0
 #define aPj 0x1CC
-#define aState 0x76		//((void *)*(unsigned __int8 *)(v3 + 0x76));
+#define aState 0x76
 #define aRole 0x200
 #define aFrags 0x1DC
 #define aFlags_1 0x1E0
 #define aDeaths 0x1E4
 #define aTks 0x1E8
-#define aAlive 0x76		//((void *)(*(_BYTE *)(v3 + 0x76) == 0));
-
+#define aAlive 0x76
+#define ipOffset 0x1D4
+#define aCn 0x1C4
 #define xHeadPosition 0x4
 #define yHeadPosition 0x8
 #define zHeadPosition 0xc
-
 #define xPosition 0x28
 #define yPosition 0x2C
 #define zPosition 0x30
-
 #define xViewAngle 0x34
 #define yViewAngle 0x38
 
+inline char* iptoa(uint32_t ip)
+{
+	char formattedIP[16];
+	std::snprintf(formattedIP, sizeof(formattedIP), "%d.%d.%d.%d",
+		(ip >> 24) & 255,
+		(ip >> 16) & 255,
+		(ip >> 8) & 255,
+		ip & 255);
+	return formattedIP;
+}
+
+inline uint32_t atoui(const char* ip)
+{
+	uint32_t result = 0;
+	uint8_t octet = 0;
+	int shift = 24;
+
+	const char* ptr = ip;
+	while (*ptr) {
+		if (*ptr == '.') {
+			result |= (octet << shift);
+			shift -= 8;
+			octet = 0;
+		}
+		else if (*ptr >= '0' && *ptr <= '9') {
+			octet = octet * 10 + (*ptr - '0');
+		}
+		++ptr;
+	}
+	result |= (octet << shift);
+	return result;
+}
 
 enum weaponIds {
 	KNIFE = 0,
@@ -60,24 +89,11 @@ enum weaponIds {
 
 class pEntity
 {
-private:
-
+public:
 	uintptr_t curWeapon() {
 		return *(uintptr_t*)(this + 0x364);
 	}
 
-	char* iptoa(uint32_t ip)
-	{
-		char formattedIP[16]; // Renamed to avoid conflicts
-		std::snprintf(formattedIP, sizeof(formattedIP), "%d.%d.%d.%d",
-			(ip >> 24) & 255,
-			(ip >> 16) & 255,
-			(ip >> 8) & 255,
-			ip & 255);
-		return formattedIP;
-	}
-#define ATTR_STR(name, attribute)    if(!strcmp(attr, #name)) { result(attribute); return; }
-public:
 	char* getName()
 	{
 		return (char*)(this + aName_1);
@@ -119,6 +135,10 @@ public:
 		return **(int**)(curWeapon() + aMagcontent);
 	}
 
+	int getClientNumber() {
+		return *(int*)(this + aCn);
+	}
+
 	int getAmmo() {
 		return **(int**)(curWeapon() + aAmmo);
 	}
@@ -155,7 +175,7 @@ public:
 		return *(bool*)(this + aAttacking);
 	}
 
-	bool isScopig() {
+	bool isScoping() {
 		return *(bool*)(this + aScoping);
 	}
 
@@ -179,7 +199,7 @@ public:
 
 	vec2 getViewAngle()
 	{
-		return { *(float*)(this + xViewAngle), *(float*)(this + yViewAngle)};
+		return { *(float*)(this + xViewAngle), *(float*)(this + yViewAngle) };
 	}
 
 	void setName(char* name) {
@@ -197,10 +217,6 @@ public:
 
 	void setArmour(int armour) {
 		*(int*)(this + aArmour) = armour;
-	}
-
-	void setSpread(int spread) {
-		*(int*)(curWeapon() + aSpread) = spread;
 	}
 
 	void setRecoil(int recoil) {
@@ -236,6 +252,10 @@ public:
 		*reinterpret_cast<float*>(this + zHeadPosition) = position.z;
 	}
 
+	void setClientNumber(int num)
+	{
+		*reinterpret_cast<int*>(this + aCn) = num;
+	}
 };
 
 class offset
@@ -248,7 +268,7 @@ public:
 	uintptr_t* entitylistPtr = NULL;
 	uintptr_t intersectGeometryPtr = NULL;
 	pEntity* localPlayer = NULL;
-
+	uintptr_t spreadfunc = NULL;
 	int* playerCount;
 
 	std::vector<pEntity*> getEntity();
@@ -260,7 +280,8 @@ public:
 	bool isVisible(pEntity* ent);
 
 	void init();
+};
 
-}; inline offset offsets;
+inline offset offsets;
 
 #endif // !offsets_h
