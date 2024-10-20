@@ -6,7 +6,9 @@ Read the `LICENSE` file.
 
 # How to use
 Open the solution on Visual Studio.  
-Compile as Debug (x86).  
+Compile as Debug (x86).
+Inject to "ac_client.exe" process.
+Enjoy.
 
 # Screenshots
 ![image](https://github.com/user-attachments/assets/7a9e5aa2-7788-4d2a-88e2-4a00709d1ca1)
