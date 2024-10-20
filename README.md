@@ -10,7 +10,7 @@ Compile as Debug (x86).
 
 # Screenshots
 ![image](https://github.com/user-attachments/assets/7a9e5aa2-7788-4d2a-88e2-4a00709d1ca1)
-![image](https://github.com/user-attachments/assets/36676198-bc97-4cf7-a67f-b27a5fa49f1e)
-![image](https://github.com/user-attachments/assets/ddbd961a-cb95-43a1-a952-1bb9c83b3880)
-![image](https://github.com/user-attachments/assets/751a2ce6-9ab7-4f7d-a26e-7ec647379adf)
-![image](https://github.com/user-attachments/assets/4fa8bc06-10eb-49df-a55a-837a062eeb2b)
+![image](https://github.com/user-attachments/assets/bb3a7755-5441-4085-8490-ad207d25ed63)
+![image](https://github.com/user-attachments/assets/993035a5-aa42-4a8f-924d-41cd91bac014)
+![image](https://github.com/user-attachments/assets/3169ace7-8486-44f2-9827-3ddebcc7871a)
+![image](https://github.com/user-attachments/assets/9a401bf7-42fd-4e14-9de3-59878b13eaa9)
