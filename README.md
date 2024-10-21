@@ -1,13 +1,13 @@
 # AssaultCube Multihack
-Multihack for Assault Cube (1.3.0.2).  
+internal cheat for Assault Cube (1.3.0.2)
 
 # License
 Read the `LICENSE` file.
 
 # How to use
-Open the solution on Visual Studio.  
+Open the solution on Visual Studio.
 Compile as Debug (x86).
-Inject to "ac_client.exe" process. 
+Inject to "ac_client.exe" process.
 Enjoy.
 
 # Screenshots
