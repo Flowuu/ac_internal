@@ -1,9 +1,6 @@
 # AssaultCube Multihack
 internal cheat for Assault Cube (1.3.0.2)
 
-# License
-Read the `LICENSE` file.
-
 # How to use
 Open the solution on Visual Studio.
 Compile as Debug (x86).
