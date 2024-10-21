@@ -240,21 +240,21 @@ public:
 
 	void setPosition(vec3 position)
 	{
-		*reinterpret_cast<float*>(this + xPosition) = position.x;
-		*reinterpret_cast<float*>(this + yPosition) = position.y;
-		*reinterpret_cast<float*>(this + zPosition) = position.z;
+		*(float*)(this + xPosition) = position.x;
+		*(float*)(this + yPosition) = position.y;
+		*(float*)(this + zPosition) = position.z;
 	}
 
 	void setHeadPosition(vec3 position)
 	{
-		*reinterpret_cast<float*>(this + xHeadPosition) = position.x;
-		*reinterpret_cast<float*>(this + yHeadPosition) = position.y;
-		*reinterpret_cast<float*>(this + zHeadPosition) = position.z;
+		*(float*)(this + xHeadPosition) = position.x;
+		*(float*)(this + yHeadPosition) = position.y;
+		*(float*)(this + zHeadPosition) = position.z;
 	}
 
 	void setClientNumber(int num)
 	{
-		*reinterpret_cast<int*>(this + aCn) = num;
+		*(int*)(this + aCn) = num;
 	}
 };
 
